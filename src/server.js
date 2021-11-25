@@ -25,6 +25,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 app.use('/1.0.0',require('./1.0.0/routes/Branch'));
+app.use('/1.0.0',require('./1.0.0/routes/Invoice'));
 
 const server = app.listen(app.get('port'),(req,res)=>{
   debug(`${moment(new Date()).tz('America/Tegucigalpa').format("YYYY-MM-DD HH:mm:ss -06:00 UTC ")} Starting to listening on port ${ app.get('port')} `);
