@@ -18,8 +18,9 @@ router.get('/branch/:branch/invoice',async(req,res)=>{
     let invoice = new Invoice(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('branch',sql.NVarChar(10),invoice.branch)
+    .input('branch',sql.Int,invoice.branch)
     .query(invoice.queryGet);
+    console.log(invoice.queryGet)
     if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
 

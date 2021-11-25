@@ -5,7 +5,6 @@ module.exports = {
     'user':process.env.user,
     'options': {
         'encrypt': false,
-        'enableArithAbort': true
-      },
+        'enableArithAbort': true,
   
-  };
+  }};
