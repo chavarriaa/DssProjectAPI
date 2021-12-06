@@ -13,9 +13,29 @@ module.exports=class Branch{
     this.total = data.total;
     this.isprinted = data.discount;
     this.createdat = data.createdat;
-    
-    this.queryGet=`SELECT * FROM ${this.db} WHERE branch=@branch`
-    this.queryGetByID=`${this.queryGet} WHERE id = @id `
+    this.queryGet=`
+      SELECT 
+      I.[id],
+      I.[branch],
+      B.[name] as 'branchName',
+      I.[client],
+      C.[name] as 'clientName',
+      I.[date],
+      I.[seller],
+      S.[name] as 'sellerName',
+      I.[subtotal],
+      I.[discount],
+      I.[isv],
+      I.[total],
+      I.[isprinted],
+      I.[createdat]
+      FROM INVOICE I
+      INNER JOIN BRANCH B ON I.branch = B.id
+      INNER JOIN CLIENT C ON I.client = C.id
+      INNER JOIN SELLER S ON I.seller = S.id
+      WHERE I.[branch] =@branch
+    `
+    this.queryGetByID=`${this.queryGet} AND i.id = @id `
     this.queryPost=`INSERT INTO ${this.db} VALUES (@branch,@client,@date,@seller,@subtotal,@discount,@isv,@total,@isprinted,@createdat)`
     this.queryUpdateByID=`UPDATE ${this.db} 
       SET 

@@ -1,44 +1,44 @@
+
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
 const debug = require('debug')('api:error')
 const config = require('../lib/config')
-const controllerName = 'Invoice'
-const Invoice = require('../classes/Invoice')
+const controllerName = 'Product'
+const Product = require('../classes/Product')
 const {
   successMessage,
   failMessage
 } = require('../lib/handleEvents.js'); 
-    
+
 //EVENTO GET PARA RECIBIR TODAS LOS DATOS 
-router.get('/branch/:branch/invoice',async(req,res)=>{
+router.get('/product',async(req,res)=>{
   try{
 
     let data = Object.assign(req.body,req.params)
-    let invoice = new Invoice(data,req.query);
+    let product = new Product(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('branch',sql.Int,invoice.branch)
-    .query(invoice.queryGet);
-
+    .input('branch',sql.Int,product.branch)
+    .query(product.queryGet);
     if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
 
   } catch (e) {
     res.status(404).json(failMessage(`${req.method} ${controllerName}` ,e));
- 
+    console.log(e)
     debug(e)
   }
 })
 
 //EVENTO GET PARA RECIBIR DATO SEGÚN ID
-router.get('/branch:/branch/invoice/:id',async(req,res)=>{
+router.get('product/:id',async(req,res)=>{
   try{
     let data = Object.assign(req.body,req.params)
-    let invoice = new Invoice(data,req.query);
+    let product = new Product(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('id',sql.Int,invoice.id)
+    .input('id',sql.Int,product.id)
     .query(invoice.queryGetByID);
     if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
@@ -49,23 +49,19 @@ router.get('/branch:/branch/invoice/:id',async(req,res)=>{
 })
 
 //EVENTO POST PARA MANDAR A GUARDAR DATOS
-router.post('/branch/:branch/invoice',async(req,res)=>{
+router.post('/product',async(req,res)=>{
   try{
     let data = Object.assign(req.body,req.params)
-    let invoice = new Invoice(data,req.query);
+    let product = new Product(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('branch',sql.NVarChar(100),invoice.branch)
-    .input('client',sql.NVarChar(10),invoice.client)
-    .input('date',sql.Date,invoice.date)
-    .input('seller',sql.NVarChar(20),invoice.seller)
-    .input('subtotal',sql.Decimal(18,2),invoice.subtotal)
-    .input('discount',sql.Decimal(18,2),invoice.discount)
-    .input('isv',sql.Decimal(18,2),invoice.isv)
-    .input('total',sql.Decimal(18,2),invoice.total)
-    .input('isprinted',sql.SmallInt,invoice.isprinted)
-    .input('createdat',sql.Date,invoice.createdat)
-    .query(invoice.queryPost);
+    .input('id',sql.int,product.id)
+    .input('name',sql.NVarChar(100),product.name)
+    .input('brand',sql.int,product.brand)
+    .input('category',sql.int,product.category)
+    .input('state',sql.int,product.state)
+    .input('gender',sql.NVarChar(10),product,gender)
+    .query(product.queryPost);
 
     //if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
@@ -77,24 +73,20 @@ router.post('/branch/:branch/invoice',async(req,res)=>{
 
 //EVENTO PUT PARA MANDAR A ACTUALIZAR DATOS POR ID
 
-router.put('/invoice/:id',async(req,res)=>{
+router.put('/product/:id',async(req,res)=>{
   try{
     let data = Object.assign(req.body,req.params)
-    let invoice = new Invoice(data,req.query);
+    let product = new Product(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('branch',sql.NVarChar(100),invoice.branch)
-    .input('client',sql.NVarChar(10),invoice.client)
-    .input('date',sql.Date,invoice.date)
-    .input('seller',sql.NVarChar(20),invoice.seller)
-    .input('subtotal',sql.Decimal(18,2),invoice.subtotal)
-    .input('discount',sql.Decimal(18,2),invoice.discount)
-    .input('isv',sql.Decimal(18,2),invoice.isv)
-    .input('total',sql.Decimal(18,2),invoice.total)
-    .input('isprinted',sql.SmallInt,invoice.isprinted)
-    .input('createdat',sql.Date,invoice.createdat)
-    .input('id',sql.Int,invoice.id)
-    .query(invoice.queryUpdateByID);
+    .input('id',sql.int,product.id)
+    .input('name',sql.NVarChar(100),product.name)
+    .input('brand',sql.int,product.brand)
+    .input('category',sql.int,product.category)
+    .input('state',sql.int,product.state)
+    .input('gender',sql.NVarChar(10),product,gender)
+    .input('id',sql.Int,product.id)
+    .query(product.queryUpdateByID);
 
     //if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
@@ -105,14 +97,14 @@ router.put('/invoice/:id',async(req,res)=>{
 })
 
 //EVENTO DELETE PARA BORRAR UN DATO POR ID
-router.delete('/invoice/:id',async(req,res)=>{
+router.delete('/product/:id',async(req,res)=>{
   try{
     let data = Object.assign(req.body,req.params)
-    let invoice = new Invoice(data,req.query);
+    let product = new Product(data,req.query);
     let pool = await sql.connect(config);
     let response = await pool.request()
-    .input('id',sql.Int,invoice.id)
-    .query(invoice.queryDeleteByID );
+    .input('id',sql.Int,product.id)
+    .query(product.queryDeleteByID );
     //if (response.rowsAffected <= 0) { throw "No existe datos con esos parámetros"};
     res.json(successMessage(`${req.method} ${controllerName}` ,response.recordsets)) 
   } catch (e) {
@@ -120,5 +112,7 @@ router.delete('/invoice/:id',async(req,res)=>{
     debug(e)
   }
 })
+
+
 
 module.exports = router;

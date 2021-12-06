@@ -27,6 +27,13 @@ app.use(express.json());
 app.use('/1.0.0',require('./1.0.0/routes/Branch'));
 app.use('/1.0.0',require('./1.0.0/routes/Invoice'));
 app.use('/1.0.0',require('./1.0.0/routes/Category'));
+app.use('/1.0.0',require('./1.0.0/routes/Product'));
+app.use('/1.0.0',require('./1.0.0/routes/Brand'));
+app.use('/1.0.0',require('./1.0.0/routes/InvoiceDetail'));
+app.use('/1.0.0',require('./1.0.0/routes/Price'));
+app.use('/1.0.0',require('./1.0.0/routes/Client'));
+app.use('/1.0.0',require('./1.0.0/routes/Seller'));
+
 
 const server = app.listen(app.get('port'),(req,res)=>{
   debug(`${moment(new Date()).tz('America/Tegucigalpa').format("YYYY-MM-DD HH:mm:ss -06:00 UTC ")} Starting to listening on port ${ app.get('port')} `);
